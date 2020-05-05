@@ -13,13 +13,31 @@ const StarsDisplay = (props) => (
 )
 
 const PlayNumber = (props) => (
-  <button className="number" onClick={()=> console.log('Num', props.number)}>
+  <button 
+    className="number" 
+    style={{backgroundColor: colors[props.status]}}
+    onClick={()=> console.log('Num', props.number)}
+  >
     {props.number}
-    </button>
+  </button>
 )
 
 const App = () => {
   const [stars, setStars] = useState(utils.random(1,9))
+  const [availableNums, setAvaialbleNumbs] = useState(1,2,3,4,5)
+  const [candidateNums, setCandidateNums] = useState([2,3])
+
+  const candidatesAreWrong = utils.sum(candidateNums) > stars
+
+  const numberStatus = (number) => {
+    if (!availableNums.includes(number)) {
+      return "used"
+    }
+    if (candidateNums.includes(number)) {
+      return candidatesAreWrong ? "wrong" : "candidate"
+    }
+    return "available"
+  }
   return (
 
     <div className="game">
@@ -35,7 +53,11 @@ const App = () => {
 
         <div className="right">
           {utils.range(1, 9).map(number => 
-          <PlayNumber key={number} number={number}/>
+            <PlayNumber 
+              key={number}
+              status={numberStatus(number)}
+              number={number}
+            />
           )}
         </div>
       </div>
